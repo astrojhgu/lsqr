@@ -1,5 +1,8 @@
-use std::fmt::Debug;
+/// translated from 
+/// https://github.com/JuliaLinearAlgebra/IterativeSolvers.jl/blob/master/src/lsqr.jl
+/// almost line by line
 
+use std::fmt::Debug;
 use ndarray::{Array1, ArrayView1, ArrayViewMut1, ScalarOperand};
 use num::Float;
 
@@ -41,9 +44,9 @@ pub fn lsqr<T, F, FT>(
     let damp = T::zero();
     let dampsq = damp.powi(2);
     let mut u = &b - &aprod(x.view());
-    println!("{:?}", u);
+    //println!("{:?}", u);
     let mut v = x.to_owned();
-    println!("{:?}", v);
+    //println!("{:?}", v);
     let beta = norm(u.view());
 
     let mut alpha = T::zero();
@@ -52,27 +55,27 @@ pub fn lsqr<T, F, FT>(
         v = atprod(u.view());
         alpha = norm(v.view());
     }
-    println!("u={:?},alpha={:?}", u, alpha);
+    //println!("u={:?},alpha={:?}", u, alpha);
     if alpha > T::zero() {
         v = v / alpha;
     }
-    println!("v={:?}", v);
+    //println!("v={:?}", v);
     let mut w = v.clone();
     let mut arnorm = alpha * beta;
     if arnorm == T::zero() {
         return;
     }
-    println!("arnorm={:?}", arnorm);
+    //println!("arnorm={:?}", arnorm);
     let mut rhobar = alpha;
     let mut rnorm;
     let (mut phibar, bnorm) = (beta, beta);
-    println!("phibar={:?}", phibar);
+    //println!("phibar={:?}", phibar);
     while itn < maxiter && istop ==0 {
         itn += 1;
         let tmpm = aprod(v.view());
         u = &tmpm - (&u * alpha);
         let beta = norm(u.view());
-        println!("beta={:?}", beta);
+        //println!("beta={:?}", beta);
 
         if beta > T::zero() {
             u = u / beta;
@@ -106,9 +109,9 @@ pub fn lsqr<T, F, FT>(
         let t2 = -theta / rho;
         //let x1=;
         x.assign(&(&x + &w * t1));
-        println!("x={:?}", x);
+        //println!("x={:?}", x);
         w = &w * t2 + &v;
-        println!("w={:?}", w);
+        //println!("w={:?}", w);
         let wrho = &w / rho;
         ddnorm = ddnorm + norm(wrho.view());
 
@@ -137,12 +140,12 @@ pub fn lsqr<T, F, FT>(
         let _r2norm = rnorm;
 
         let test1 = rnorm / bnorm;
-        println!("test1={:?}", test1);
+        //println!("test1={:?}", test1);
         let test2 = arnorm / (anorm * rnorm);
         let test3 = T::one() / acond;
         let t1 = test1 / (T::one() + anorm * xnorm / bnorm);
         let rtol = btol + atol * anorm * xnorm / bnorm;
-        println!("rtol={:?}", rtol);
+        //println!("rtol={:?}", rtol);
 
         if itn >= maxiter {
             istop = 7
@@ -172,5 +175,5 @@ pub fn lsqr<T, F, FT>(
         }
         
     }
-    println!("{}", istop);
+    //println!("{}", istop);
 }

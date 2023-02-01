@@ -20,7 +20,7 @@ fn main() {
         a.t().dot(&x)
     };
 
-    let mut x=array![2.0, 3.0];
+    let mut x=array![1.001, 0.999];
     //println!("{}", aprod(x.view())) ;
     lsqr(x.view_mut(), &aprod, &atprod, b.view(), 1e-12, 1e-12, 1e99, 30);
     println!("{}", x);
